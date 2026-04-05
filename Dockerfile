@@ -32,10 +32,9 @@ COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
 EXPOSE 5000
 
-WORKDIR /app/backend
-
 # Create a startup script to handle migrations and launching the app
-RUN echo '#!/bin/sh\nnpx prisma db push --accept-data-loss\nnode dist/index.js' > start.sh
-RUN chmod +x start.sh
+WORKDIR /app
+RUN echo '#!/bin/sh\nset -e\ncd /app/backend\nnpx prisma db push --accept-data-loss\nnode dist/index.js' > /app/start.sh
+RUN chmod +x /app/start.sh
 
-CMD ["./start.sh"]
+CMD ["/app/start.sh"]
