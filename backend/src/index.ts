@@ -34,12 +34,8 @@ app.get('/api/health', (req, res) => {
 });
 
 // Все остальные запросы направляем на index.html (для React Router)
-app.get('*', (req, res) => {
-  if (req.path.startsWith('/api')) {
-    res.status(404).json({ success: false, message: 'API endpoint not found' });
-  } else {
-    res.sendFile(path.join(frontendPath, 'index.html'));
-  }
+app.get(/^(?!\/api).*/, (req: Request, res: Response) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 app.use(errorHandler);
