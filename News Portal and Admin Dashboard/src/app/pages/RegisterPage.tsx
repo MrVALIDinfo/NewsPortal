@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Eye, EyeOff, UserPlus } from 'lucide-react';
+import { toast } from 'sonner';
 import { useApp } from '../context/AppContext';
 
 export function RegisterPage() {

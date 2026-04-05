@@ -1,0 +1,26 @@
+services:
+  # Backend Service
+  - type: web
+    name: newsportal-backend
+    env: docker
+    dockerContext: ./backend
+    dockerfile: Dockerfile
+    plan: free # Change to starter/pro if needed
+    envVars:
+      - key: DATABASE_URL
+        value: file:./dev.db
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 5000
+    
+  # Frontend Service
+  - type: web
+    name: newsportal-frontend
+    env: docker
+    dockerContext: "./News Portal and Admin Dashboard"
+    dockerfile: Dockerfile
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        value: https://newsportal-backend.onrender.com/api # Replace with your actual backend URL after first deploy
