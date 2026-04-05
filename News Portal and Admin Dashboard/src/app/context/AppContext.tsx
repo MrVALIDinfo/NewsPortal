@@ -26,13 +26,13 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | null>(null);
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://newsportal-2bpz.onrender.com/api';
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [articles, setArticles] = useState<Article[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
@@ -60,7 +60,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       let url = `${API_BASE}/posts?page=1&limit=50`;
       if (searchQuery) url += `&search=${searchQuery}`;
       if (selectedTag) url += `&tag=${selectedTag}`;
-      
+
       const res = await fetch(url);
       const data = await res.json();
       if (data.success) {
@@ -223,12 +223,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const token = getToken();
       const res = await fetch(`${API_BASE}/posts/${pId}/comments`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         },
-        body: JSON.stringify({ 
-          content: comment.text, 
+        body: JSON.stringify({
+          content: comment.text,
           imageUrl: comment.image,
           guestName: comment.userName,
           guestInitials: comment.userInitials,
@@ -237,9 +237,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       });
       const data = await res.json();
       if (data.success) {
-         if (currentUser?.role === 'admin') fetchComments();
-         await fetchCommentsForPost(pId);
-         await fetchPosts();
+        if (currentUser?.role === 'admin') fetchComments();
+        await fetchCommentsForPost(pId);
+        await fetchPosts();
       }
     } catch (err) { console.error(err); }
   }, [fetchPosts, fetchComments, currentUser]);
@@ -258,9 +258,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     try {
       await fetch(`${API_BASE}/admin/comments/${id}/status`, {
         method: 'PATCH',
-        headers: { 
-          'Content-Type': 'application/json', 
-          Authorization: `Bearer ${getToken()}` 
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`
         },
         body: JSON.stringify({ status })
       });
