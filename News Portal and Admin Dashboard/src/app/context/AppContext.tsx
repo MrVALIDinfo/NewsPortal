@@ -26,7 +26,7 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | null>(null);
 
-const API_BASE = 'https://newsportal-2bpz.onrender.com/api';
+const API_BASE = 'http://localhost:5000/api';
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
