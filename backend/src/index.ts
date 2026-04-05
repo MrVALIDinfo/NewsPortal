@@ -1,4 +1,5 @@
-import express from 'express';
+import path from 'path';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
@@ -16,18 +17,30 @@ app.use(express.json());
 // Разрешаем CORS для запросов со всех доменов (по умолчанию для локальной разработки)
 app.use(cors());
 
+// Путь к статическим файлам фронтенда (после сборки)
+const frontendPath = path.join(__dirname, '../../frontend/dist');
+
+// Подключение маршрутов API
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/admin', adminRoutes);
+
+// Обслуживание статики фронтенда
+app.use(express.static(frontendPath));
+
 // Healthcheck
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', time: new Date() });
 });
 
-// Подключение маршрутов
-app.get('/', (req, res) => {
-  res.json({ message: 'News Portal API is running', version: '1.0' });
+// Все остальные запросы направляем на index.html (для React Router)
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    res.status(404).json({ success: false, message: 'API endpoint not found' });
+  } else {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+  }
 });
-app.use('/api/auth', authRoutes);
-app.use('/api/posts', postRoutes);
-app.use('/api/admin', adminRoutes);
 
 app.use(errorHandler);
 

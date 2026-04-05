@@ -1,11 +1,10 @@
 services:
-  # Backend Service
   - type: web
-    name: newsportal-backend
+    name: newsportal-monolith
     env: docker
-    dockerContext: ./backend
+    dockerContext: .
     dockerfile: Dockerfile
-    plan: free # Change to starter/pro if needed
+    plan: free
     envVars:
       - key: DATABASE_URL
         value: file:./dev.db
@@ -13,14 +12,4 @@ services:
         generateValue: true
       - key: PORT
         value: 5000
-    
-  # Frontend Service
-  - type: web
-    name: newsportal-frontend
-    env: docker
-    dockerContext: "./News Portal and Admin Dashboard"
-    dockerfile: Dockerfile
-    plan: free
-    envVars:
-      - key: VITE_API_URL
-        value: https://newsportal-backend.onrender.com/api # Replace with your actual backend URL after first deploy
+    # No custom disk needed if you don't mind data being reset
